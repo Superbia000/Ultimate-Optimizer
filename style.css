@@ -1,0 +1,150 @@
+/* ==========================================
+   1. 渲染性能極限化 (Hardware Acceleration)
+   ========================================== */
+#chat {
+    scroll-behavior: smooth;
+    will-change: scroll-position;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+}
+
+/* 核心：虛擬 DOM 的 CSS 魔法，不在屏幕內部的消息直接跳過 GPU 渲染 */
+.virtual-hidden {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 150px; /* 預估對話框高度 */
+}
+
+/* ==========================================
+   2. 現代化美學設計 (Glassmorphism & Colors)
+   ========================================== */
+:root {
+    --ut-bg-main: #0f1015;
+    --ut-bg-panel: rgba(25, 27, 33, 0.85);
+    --ut-text-main: #e2e8f0;
+    --ut-accent: #6366f1;
+    --ut-mes-user: #1e212b;
+    --ut-mes-ai: #16181d;
+    --ut-radius: 16px;
+    --ut-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+body {
+    background-color: var(--ut-bg-main) !important;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+    color: var(--ut-text-main) !important;
+    overflow: hidden; /* 防止外層亂滾 */
+}
+
+/* 面板毛玻璃效果 */
+#sheld, #rmain, .drawer-content {
+    background: var(--ut-bg-panel) !important;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ==========================================
+   3. 對話氣泡重構 (Beautiful Chat Bubbles)
+   ========================================== */
+.mes {
+    border-radius: var(--ut-radius) !important;
+    margin-bottom: 20px !important;
+    padding: 18px !important;
+    box-shadow: var(--ut-shadow) !important;
+    transition: background-color 0.3s ease, transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255,255,255,0.03) !important;
+}
+
+.mes:hover {
+    transform: translateY(-2px) translateZ(0); /* 微交互動畫 */
+}
+
+.mes.user_mes {
+    background-color: var(--ut-mes-user) !important;
+    border-left: 4px solid var(--ut-accent) !important;
+}
+
+.mes.ch_mes {
+    background-color: var(--ut-mes-ai) !important;
+}
+
+.avatar img {
+    border-radius: 50% !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
+}
+
+.avatar img:hover {
+    transform: scale(1.1);
+}
+
+/* ==========================================
+   4. 徹底重構多平台自適應佈局 (PC, Tablet, Mobile)
+   ========================================== */
+
+/* 全局 Flex 佈局重構 */
+#main_screen {
+    display: flex !important;
+    flex-direction: row !important;
+    height: 100dvh !important; /* 使用 dVH 解決手機瀏覽器導航列遮擋 Bug */
+    width: 100vw !important;
+}
+
+#rmain {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    max-width: 100% !important;
+    position: relative !important;
+    width: auto !important;
+}
+
+/* 文本輸入框優化 */
+#send_textarea {
+    border-radius: var(--ut-radius) !important;
+    background: rgba(0,0,0,0.3) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    padding: 15px !important;
+    transition: border 0.3s ease;
+}
+#send_textarea:focus {
+    border-color: var(--ut-accent) !important;
+    outline: none !important;
+}
+
+/* ---- 針對手機與平板的終極優化 (Max Width: 768px) ---- */
+@media (max-width: 768px) {
+    /* 側邊欄變為滑出式抽屜 (Drawer) */
+    #sheld {
+        position: fixed !important;
+        z-index: 99999 !important;
+        width: 85vw !important;
+        max-width: 320px !important;
+        height: 100dvh !important;
+        transform: translateX(-100%);
+        transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        box-shadow: 20px 0 50px rgba(0,0,0,0.8);
+    }
+    
+    /* 配合 JS 添加的 class 來控制開關 */
+    #sheld.mobile-drawer-open {
+        transform: translateX(0) !important;
+    }
+
+    .mes {
+        font-size: 15px !important; /* 更適合手機閱讀的字號 */
+        padding: 12px !important;
+        margin-bottom: 12px !important;
+    }
+    
+    /* 擴大手機端的觸摸目標 (Touch Targets) 以防誤觸 */
+    .menu_button, .swipe_left, .swipe_right {
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+
+    /* 隱藏佔空間的桌面端裝飾 */
+    .desktop-only-ui {
+        display: none !important;
+    }
+}
