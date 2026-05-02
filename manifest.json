@@ -1,0 +1,11 @@
+{
+    "display_name": "Ultimate Performance & UI Overhaul",
+    "description": "徹底重構 SillyTavern 渲染引擎與 UI，極限提升幀率、網速與自適應體驗。",
+    "version": "1.0.0",
+    "author": "AI Architect",
+    "main": "index.js",
+    "server": "server.js",
+    "css": "style.css",
+    "homePage": "https://github.com/Superbia000/Ultimate-Optimizer",
+    "dependencies": []
+}
